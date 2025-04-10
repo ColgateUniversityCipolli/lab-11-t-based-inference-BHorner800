@@ -81,12 +81,34 @@ ggdat.farther <- tibble(t    =  farther.t.stat,
 ggdat.difference <- tibble(t    =  diff.t.stat, 
                        y    = 0) # to plot on x-axis
 
+###############
+#Plotting Closer:
+###############
+# Resampling to approximate the sampling distribution 
+# on the data
+x = finch.data$Closer_vals
+mu0 = 0
+s <- sd(x)
+R <- 1000
+resamples <- tibble(t=numeric(R))
+for(i in 1:R){
+  curr.sample <- sample(x=x,
+                        size=n,
+                        replace=T)
+  resamples$t[i] = (mean(curr.sample)-mu0)/(sd(curr.sample)/sqrt(n))
+}
 
-ggplot() +
+t.breaks <- c(-5, qt(0.025, df = n-1), # rejection region (left)
+              0, 
+              qt(0.975, df = n-1), 5,  # rejection region (right)
+              closer.t.stat)                  # t-statistic observed
+xbar.breaks <- t.breaks * s/(sqrt(n)) + mu0
+
+
+closer_plot <- ggplot() +
   # null distribution
   geom_line(data=ggdat.t, 
-            aes(x=t, y=pdf.null,
-                color="T-distribution (Null)"))+
+            aes(x=t, y=pdf.null))+
   geom_hline(yintercept=0) +
   # rejection regions
   geom_ribbon(data=subset(ggdat.t, t<=qt(0.025, df=n-1)), 
@@ -95,14 +117,128 @@ ggplot() +
   geom_ribbon(data=subset(ggdat.t, t>=qt(0.975, df=n-1)), 
               aes(x=t, ymin=0, ymax=pdf.null),
               fill="grey", alpha=0.5)+
+  # Resampling Distribution
+  stat_density(data=resamples, 
+               aes(x=t),
+               geom="line", color="grey")+
   # plot observation point
   geom_point(data=ggdat.closer, aes(x=t, y=y, 
-             color="T-value closer")) +
-  geom_point(data=ggdat.farther, aes(x=t, y=y, 
-                                    color="T-value further")) +
-  geom_point(data=ggdat.difference, aes(x=t, y=y, 
-                                    color="T-value difference")) +
+             color="Observed Point")) +
+  # clean up aesthetics
   theme_bw()+
-  xlab("t")+
-  ylab("Density")+
-  labs(color="")
+  scale_x_continuous("t",
+                     breaks = round(t.breaks,2),
+                     sec.axis = sec_axis(~.,
+                                         name = bquote(bar(x)),
+                                         breaks = t.breaks,
+                                         labels = round(xbar.breaks,2)))+
+  ylab("Density")
+
+
+###############
+#Plotting Further:
+###############
+# Resampling to approximate the sampling distribution 
+# on the data
+x = finch.data$Farther_vals
+mu0 = 0
+s <- sd(x)
+R <- 1000
+resamples <- tibble(t=numeric(R))
+for(i in 1:R){
+  curr.sample <- sample(x=x,
+                        size=n,
+                        replace=T)
+  resamples$t[i] = (mean(curr.sample)-mu0)/(sd(curr.sample)/sqrt(n))
+}
+
+t.breaks <- c(-5, qt(0.025, df = n-1), # rejection region (left)
+              0, 
+              qt(0.975, df = n-1), 5,  # rejection region (right)
+              farther.t.stat)                  # t-statistic observed
+xbar.breaks <- t.breaks * s/(sqrt(n)) + mu0
+
+
+farther_plot <- ggplot() +
+  # null distribution
+  geom_line(data=ggdat.t, 
+            aes(x=t, y=pdf.null))+
+  geom_hline(yintercept=0) +
+  # rejection regions
+  geom_ribbon(data=subset(ggdat.t, t<=qt(0.025, df=n-1)), 
+              aes(x=t, ymin=0, ymax=pdf.null),
+              fill="grey", alpha=0.5)+
+  geom_ribbon(data=subset(ggdat.t, t>=qt(0.975, df=n-1)), 
+              aes(x=t, ymin=0, ymax=pdf.null),
+              fill="grey", alpha=0.5)+
+  # Resampling Distribution
+  stat_density(data=resamples, 
+               aes(x=t),
+               geom="line", color="grey")+
+  # plot observation point
+  geom_point(data=ggdat.farther, aes(x=t, y=y, 
+                                    color="Observed Point")) +
+  # clean up aesthetics
+  theme_bw()+
+  scale_x_continuous("t",
+                     breaks = round(t.breaks,2),
+                     sec.axis = sec_axis(~.,
+                                         name = bquote(bar(x)),
+                                         breaks = t.breaks,
+                                         labels = round(xbar.breaks,2)))+
+  ylab("Density")
+
+###############
+#Plotting Further:
+###############
+# Resampling to approximate the sampling distribution 
+# on the data
+x = finch.data$difference
+mu0 = 0
+s <- sd(x)
+R <- 1000
+resamples <- tibble(t=numeric(R))
+for(i in 1:R){
+  curr.sample <- sample(x=x,
+                        size=n,
+                        replace=T)
+  resamples$t[i] = (mean(curr.sample)-mu0)/(sd(curr.sample)/sqrt(n))
+}
+
+t.breaks <- c(-5, qt(0.025, df = n-1), # rejection region (left)
+              0, 
+              qt(0.975, df = n-1), 5,  # rejection region (right)
+              diff.t.stat)                  # t-statistic observed
+xbar.breaks <- t.breaks * s/(sqrt(n)) + mu0
+
+
+difference_plot <- ggplot() +
+  # null distribution
+  geom_line(data=ggdat.t, 
+            aes(x=t, y=pdf.null))+
+  geom_hline(yintercept=0) +
+  # rejection regions
+  geom_ribbon(data=subset(ggdat.t, t<=qt(0.025, df=n-1)), 
+              aes(x=t, ymin=0, ymax=pdf.null),
+              fill="grey", alpha=0.5)+
+  geom_ribbon(data=subset(ggdat.t, t>=qt(0.975, df=n-1)), 
+              aes(x=t, ymin=0, ymax=pdf.null),
+              fill="grey", alpha=0.5)+
+  # Resampling Distribution
+  stat_density(data=resamples, 
+               aes(x=t),
+               geom="line", color="grey")+
+  # plot observation point
+  geom_point(data=ggdat.difference, aes(x=t, y=y, 
+                                     color="Observed Point")) +
+  # clean up aesthetics
+  theme_bw()+
+  scale_x_continuous("t",
+                     breaks = round(t.breaks,2),
+                     sec.axis = sec_axis(~.,
+                                         name = bquote(bar(x)),
+                                         breaks = t.breaks,
+                                         labels = round(xbar.breaks,2)))+
+  ylab("Density")
+
+(closer_plot / farther_plot)+ difference_plot
