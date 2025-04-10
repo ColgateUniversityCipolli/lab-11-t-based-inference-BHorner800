@@ -1,4 +1,54 @@
-\documentclass{article}
+\documentclass{article}\usepackage[]{graphicx}\usepackage[]{xcolor}
+% maxwidth is the original width if it is less than linewidth
+% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
+\newcommand{\hlsng}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hldef}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
+\let\hlipl\hlkwb
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
 \usepackage[margin=1.0in]{geometry} % To set margins
 \usepackage{amsmath}  % This allows me to use the align functionality.
                       % If you find yourself trying to replicate
@@ -12,11 +62,9 @@
 \usepackage{float}    % For telling R where to put a table/figure
 \usepackage{natbib}        %For the bibliography
 \bibliographystyle{apalike}%For the bibliography
-
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 \begin{document}
-<<echo=F, message=F, warning=F>>=
-library(tidyverse)
-@
+
 
 \cite{Kasdin25} show that dopamine in the brains of young zebra finches acts as 
 a learning signal, increasing when they sing closer to their adult song and 
@@ -44,26 +92,18 @@ $t$ test.
 
 \textbf{Solution:} Using \texttt{pwr.t.test()}, the researchers would need 21 observations to detect a moderate-to-large effect (as the output was $n = 20.58039$).
 
-<<echo = F, size="scriptsize", eval=T, message=F, warning=F>>=
 
-#######################################################
-# Libraries
-#######################################################
-library(pwr)
-library(ggplot2)
-library(tidyverse)
-library(patchwork)
-library(xtable)
-library(e1071)
-library(effectsize)
-@
-<<echo = T, size="scriptsize", eval=F, message=F, warning=F>>=
-pwr.t.test(d = 0.65, # moderate-large effect
-           power = 0.80,
-           sig.level = 0.05,
-           alternative = "two.sided",
-           type = "one.sample")
-@
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{pwr.t.test}\hldef{(}\hlkwc{d} \hldef{=} \hlnum{0.65}\hldef{,} \hlcom{# moderate-large effect}
+           \hlkwc{power} \hldef{=} \hlnum{0.80}\hldef{,}
+           \hlkwc{sig.level} \hldef{=} \hlnum{0.05}\hldef{,}
+           \hlkwc{alternative} \hldef{=} \hlsng{"two.sided"}\hldef{,}
+           \hlkwc{type} \hldef{=} \hlsng{"one.sample"}\hldef{)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % COLLECT DATA
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -75,10 +115,14 @@ do to collect the data for Figure 2(g). Note that you only need the
 (e.g., \texttt{closer\_vals - further\_vals}).
 
 \textbf{Solution:} To collect the data, we downloaded all of their Figure 2 data, went to the g tabs, then saved just the closer\_vals and further\_vals as a separate .csv file to easily use in our code. This was done by simply copying and pasting the two columns together. Mutating the data we also got the difference by subtracting between the two.
-<<echo = T, size="scriptsize", eval=T, message=F, warning=F>>=
-finch.data = read.csv("./41586_2025_8729_MOESM4_ESM.csv") |>
-  mutate(difference = Closer_vals - Farther_vals)
-  @
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hldef{finch.data} \hlkwb{=} \hlkwd{read.csv}\hldef{(}\hlsng{"./41586_2025_8729_MOESM4_ESM.csv"}\hldef{) |>}
+  \hlkwd{mutate}\hldef{(}\hlkwc{difference} \hldef{= Closer_vals} \hlopt{-} \hldef{Farther_vals)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % SUMMARIZE DATA
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -116,15 +160,10 @@ Difference & 0.04335 & 0.22864 & 0.33208 & 0.35895 & 0.46771 & 0.93188 \\
 \end{table}
 This indicates that the dopamine in the brains of young zebra finches decreases when they sing further from their adult song. Conversely, it increases when they are closer to the adult song, with a suggested difference between the two seen below. 
 
-<<echo = F, size="scriptsize", eval=T, message=F, warning=F>>=
-
-plot.finch = ggplot(finch.data, aes(x = difference)) + #assigns the data as the data frame and aes = x axis
-  geom_histogram(aes(y=after_stat(density)), binwidth = 0.1, fill = "lightblue", color = "black") + #makes histogram
-  labs(title = "Difference between closer and further", #titles and axis labels
-       x = "Dopamine Difference", 
-       y = "Density")
-plot.finch
-@
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
+\includegraphics[width=\maxwidth]{figure/unnamed-chunk-5-1} 
+\end{knitrout}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CONDUCT THE TESTS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -139,23 +178,29 @@ correction of their $p$-values. I'm waiting to hear back from them via email!
   \item ``The difference between populations was significant ($p=1.04 \times10^{-8}$).''
 \end{enumerate}
 
-<<echo = F, size="scriptsize", eval=T, message=F, warning=F>>=
-#Closer_vals
-closer_t = t.test(x=finch.data$Closer_vals, alternative = "greater", mu = 0)
-closer.t.stat = (closer_t[1]$statistic)
-interpret_hedges_g(hedges_g(x = finch.data$Closer_vals, alternative = "greater", mu = 0))
-
-
-#Farther_vals
-farther_t = t.test(x=finch.data$Farther_vals, alternative = "less", mu = 0)
-farther.t.stat = (farther_t[1]$statistic)
-interpret_hedges_g(hedges_g(x = finch.data$Farther_vals, alternative = "less", mu = 0))
-
-#Difference
-difference_t = t.test(x=finch.data$difference, alternative = "two.sided", mu = 0) #two-sided
-diff.t.stat = difference_t[1]$statistic
-interpret_hedges_g(hedges_g(x = finch.data$difference, mu = 0)) #two-sided
-@
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+## Hedges' g |      95% CI | Interpretation
+## ----------------------------------------
+## 1.61      | [1.10, Inf] |          large
+## 
+## - One-sided CIs: upper bound fixed at [Inf].
+## - Interpretation rule: cohen1988
+## Hedges' g |        95% CI | Interpretation
+## ------------------------------------------
+## -1.51     | [-Inf, -1.02] |          large
+## 
+## - One-sided CIs: lower bound fixed at [-Inf].
+## - Interpretation rule: cohen1988
+## Hedges' g |       95% CI | Interpretation
+## -----------------------------------------
+## 1.65      | [1.04, 2.24] |          large
+## 
+## - Interpretation rule: cohen1988
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CONDUCT THE TESTS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
