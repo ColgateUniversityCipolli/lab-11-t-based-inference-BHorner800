@@ -122,17 +122,19 @@ closer_plot <- ggplot() +
                aes(x=t),
                geom="line", color="grey")+
   # plot observation point
-  geom_point(data=ggdat.closer, aes(x=t, y=y, 
-             color="Observed Point")) +
+  geom_point(data=ggdat.closer, aes(x=t, y=y),
+             color="red") +
   # clean up aesthetics
   theme_bw()+
   scale_x_continuous("t",
                      breaks = round(t.breaks,2),
+                     labels = round(t.breaks, 2),
                      sec.axis = sec_axis(~.,
                                          name = bquote(bar(x)),
                                          breaks = t.breaks,
                                          labels = round(xbar.breaks,2)))+
-  ylab("Density")
+  ylab("Density")+
+  ggtitle("T-Test for Mean Dopamine Closer to Adult Song")
 
 
 ###############
@@ -176,17 +178,19 @@ farther_plot <- ggplot() +
                aes(x=t),
                geom="line", color="grey")+
   # plot observation point
-  geom_point(data=ggdat.farther, aes(x=t, y=y, 
-                                    color="Observed Point")) +
+  geom_point(data=ggdat.farther, aes(x=t, y=y), 
+                                    color="red") +
   # clean up aesthetics
   theme_bw()+
   scale_x_continuous("t",
                      breaks = round(t.breaks,2),
+                     labels = round(t.breaks, 2),
                      sec.axis = sec_axis(~.,
                                          name = bquote(bar(x)),
                                          breaks = t.breaks,
                                          labels = round(xbar.breaks,2)))+
-  ylab("Density")
+  ylab("Density")+
+  ggtitle("T-Test for Mean Dopamine Further from Adult Song")
 
 ###############
 #Plotting Further:
@@ -229,16 +233,19 @@ difference_plot <- ggplot() +
                aes(x=t),
                geom="line", color="grey")+
   # plot observation point
-  geom_point(data=ggdat.difference, aes(x=t, y=y, 
-                                     color="Observed Point")) +
+  geom_point(data=ggdat.difference, aes(x=t, y=y), 
+                                     color="red") +
   # clean up aesthetics
   theme_bw()+
   scale_x_continuous("t",
                      breaks = round(t.breaks,2),
+                     labels = round(t.breaks, 2),
                      sec.axis = sec_axis(~.,
                                          name = bquote(bar(x)),
                                          breaks = t.breaks,
                                          labels = round(xbar.breaks,2)))+
-  ylab("Density")
+  ylab("Density")+
+  ggtitle("T-Test for Mean Difference in Dopamine")
 
 (closer_plot / farther_plot)+ difference_plot
+
