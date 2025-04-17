@@ -50,24 +50,27 @@ plot.finch
 #Closer_vals
 closer_t = t.test(x=finch.data$Closer_vals, alternative = "greater", mu = 0)
 closer.t.stat = (closer_t[1]$statistic)
+closer_t
 interpret_hedges_g(hedges_g(x = finch.data$Closer_vals, alternative = "greater", mu = 0))
 
 
 #Farther_vals
 farther_t = t.test(x=finch.data$Farther_vals, alternative = "less", mu = 0)
 farther.t.stat = (farther_t[1]$statistic)
+farther_t
 interpret_hedges_g(hedges_g(x = finch.data$Farther_vals, alternative = "less", mu = 0))
 
 #Difference
 difference_t = t.test(x=finch.data$difference, alternative = "two.sided", mu = 0) #two-sided
 diff.t.stat = difference_t[1]$statistic
+difference_t
 interpret_hedges_g(hedges_g(x = finch.data$difference, mu = 0)) #two-sided
 
 
 #######################################################
 # Plotting null T for each value
 #######################################################
-(n <- length(finch.data$Closer_vals))
+n <- length(finch.data$Closer_vals)
 
 # For plotting the null distribution
 ggdat.t <- tibble(t=seq(-5,5,length.out=1000))|>
